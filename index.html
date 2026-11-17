@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BASS 웹소설</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #07080d;
+      --bg-surface: rgba(18, 21, 32, 0.8);
+      --bg-card: rgba(24, 28, 43, 0.88);
+      --border-subtle: rgba(212, 175, 55, 0.18);
+      --border-strong: rgba(212, 175, 55, 0.48);
+      --gold-primary: #d4af37;
+      --gold-soft: #f1d57e;
+      --text-main: #f2f4f8;
+      --text-muted: #98a2b3;
+      --text-dim: #667085;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* 심야 콘서트홀 & 중저음 파동 배경 */
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(212, 175, 55, 0.13) 0%, transparent 42%),
+        radial-gradient(circle at 82% 75%, rgba(45, 70, 145, 0.18) 0%, transparent 48%),
+        radial-gradient(circle at 50% 50%, #0d101b 0%, #06070b 100%);
+      overflow: hidden;
+    }
+
+    .bass-wave {
+      position: absolute;
+      width: 140vw;
+      height: 140vw;
+      left: -20vw;
+      top: -35vw;
+      border-radius: 45%;
+      border: 1px solid rgba(212, 175, 55, 0.06);
+      animation: rotateWave 38s linear infinite;
+      pointer-events: none;
+    }
+
+    .bass-wave:nth-child(2) {
+      width: 120vw;
+      height: 120vw;
+      left: -10vw;
+      top: -20vw;
+      border-color: rgba(120, 150, 255, 0.05);
+      animation-duration: 52s;
+      animation-direction: reverse;
+    }
+
+    @keyframes rotateWave {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      padding: 18px 24px;
+      background: var(--bg-surface);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.05));
+      border: 1px solid var(--border-strong);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Noto Serif KR', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-primary);
+    }
+
+    .brand-title h1 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: linear-gradient(90deg, #ffffff, var(--gold-soft));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 9px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+      font-size: 0.86rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: rgba(212, 175, 55, 0.14);
+      border-color: var(--border-strong);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #d4af37, #b58e22);
+      color: #090a0f;
+      border: none;
+      font-weight: 700;
+    }
+
+    .btn-gold:hover:not(:disabled) {
+      filter: brightness(1.08);
+      background: linear-gradient(135deg, #e0bd48, #c49c2b);
+    }
+
+    .btn-reader {
+      border-color: rgba(96, 165, 250, 0.4);
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .btn-reader:hover:not(:disabled) {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: rgba(96, 165, 250, 0.7);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+
+    .btn-danger {
+      border-color: rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+
+    /* 상태 배너 */
+    .status-banner {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 20px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      font-size: 0.86rem;
+    }
+
+    .status-banner.admin {
+      display: flex;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--border-strong);
+      color: var(--gold-soft);
+    }
+
+    .status-banner.reader {
+      display: flex;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(96, 165, 250, 0.45);
+      color: #bfdbfe;
+    }
+
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* 시즌 탭 & 정보 */
+    .season-tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .season-tab {
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .season-tab.active {
+      background: rgba(212, 175, 55, 0.16);
+      border-color: var(--gold-primary);
+      color: var(--gold-soft);
+    }
+
+    .season-info {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+    }
+
+    .season-info h2 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.35rem;
+      margin-bottom: 6px;
+      color: #fff;
+    }
+
+    .season-info p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* 에피소드 카드 */
+    .episode-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .episode-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    .episode-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+
+    .episode-main {
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .episode-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+      font-size: 0.8rem;
+    }
+
+    .week-badge {
+      color: var(--gold-primary);
+      font-weight: 700;
+    }
+
+    .status-pill {
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .status-public {
+      background: rgba(34, 197, 94, 0.14);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-private {
+      background: rgba(245, 158, 11, 0.14);
+      color: #fcd34d;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .episode-title {
+      font-size: 1.06rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .episode-card.locked .episode-title {
+      color: var(--text-muted);
+    }
+
+    .episode-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 뷰어 화면 */
+    .viewer {
+      display: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 36px 32px;
+      backdrop-filter: blur(16px);
+    }
+
+    .viewer.active {
+      display: block;
+    }
+
+    .viewer-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+
+    .viewer-week {
+      color: var(--gold-primary);
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .viewer-title {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    /* 리치 텍스트 본문 스타일 */
+    .viewer-content {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.08rem;
+      line-height: 2.05;
+      color: #e6e9f0;
+      word-break: keep-all;
+      min-height: 280px;
+    }
+
+    .viewer-content p {
+      margin-bottom: 1.1em;
+    }
+
+    .viewer-content blockquote {
+      border-left: 3px solid var(--gold-primary);
+      background: rgba(212, 175, 55, 0.06);
+      padding: 14px 18px;
+      margin: 20px 0;
+      border-radius: 0 10px 10px 0;
+      color: var(--gold-soft);
+      font-style: italic;
+    }
+
+    .viewer-content hr {
+      border: none;
+      border-top: 1px solid var(--border-strong);
+      margin: 28px auto;
+      width: 45%;
+    }
+
+    .viewer-content img {
+      display: block;
+      max-width: 100%;
+      max-height: 540px;
+      margin: 24px auto;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
+    }
+
+    .viewer-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* 모달 */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 4, 8, 0.82);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 680px;
+      max-height: 92vh;
+      overflow-y: auto;
+      background: #131622;
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+    }
+
+    .modal.modal-sm {
+      max-width: 440px;
+    }
+
+    .modal h3 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+      color: var(--gold-soft);
+    }
+
+    .modal p.desc {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(8, 10, 16, 0.9);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--gold-primary);
+    }
+
+    /* 리치 에디터 툴바 & 본문 영역 */
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .tool-btn {
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 18, 28, 0.9);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .tool-btn:hover {
+      background: rgba(212, 175, 55, 0.22);
+      border-color: var(--gold-primary);
+    }
+
+    .rich-editor {
+      min-height: 260px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding: 16px;
+      border-radius: 0 0 10px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(8, 10, 16, 0.92);
+      color: var(--text-main);
+      font-family: 'Noto Serif KR', serif;
+      font-size: 1rem;
+      line-height: 1.85;
+      outline: none;
+    }
+
+    .rich-editor:focus {
+      border-color: var(--gold-primary);
+    }
+
+    .rich-editor:empty:before {
+      content: attr(data-placeholder);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .rich-editor img {
+      display: block;
+      max-width: 90%;
+      max-height: 320px;
+      margin: 14px auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .rich-editor blockquote {
+      border-left: 3px solid var(--gold-primary);
+      padding-left: 12px;
+      margin: 10px 0;
+      color: var(--gold-soft);
+    }
+
+    .rich-editor hr {
+      border: none;
+      border-top: 1px solid var(--border-strong);
+      margin: 16px 0;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+      border: 1px dashed var(--border-subtle);
+      border-radius: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .episode-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .episode-controls {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      .viewer {
+        padding: 22px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-bg">
+    <div class="bass-wave"></div>
+    <div class="bass-wave"></div>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="brand" onclick="goHome()">
+        <div class="brand-icon">𝄢</div>
+        <div class="brand-title">
+          <h1>BASS 웹소설</h1>
+          <p>깊은 울림이 머무는 주간 연재 아카이브</p>
+        </div>
+      </div>
+      <div class="header-actions" id="authArea">
+        <button class="btn btn-reader" onclick="openReaderModal()">🔑 선열람 인증</button>
+        <button class="btn" onclick="openAuthModal('login')">수정자 권한</button>
+      </div>
+    </header>
+
+    <!-- 관리자 전용 바 -->
+    <div class="status-banner" id="adminBar">
+      <div><strong>● 수정자 모드 활성화됨</strong> (글 작성·수정·공개 전환 가능)</div>
+      <div class="admin-actions">
+        <button class="btn btn-sm btn-gold" onclick="openEpisodeModal()">+ 새 에피소드 게시</button>
+        <button class="btn btn-sm" onclick="openSeasonModal()">+ 새 시즌 추가</button>
+        <button class="btn btn-sm btn-danger" onclick="logoutAll()">권한 해제</button>
+      </div>
+    </div>
+
+    <!-- 선열람 독자 전용 바 -->
+    <div class="status-banner" id="readerBar">
+      <div><strong>✦ 선열람 독자 인증됨</strong> (미공개 회차 포함 전 회차 열람 가능)</div>
+      <div>
+        <button class="btn btn-sm" onclick="logoutAll()">인증 해제</button>
+      </div>
+    </div>
+
+    <!-- 메인 목록 화면 -->
+    <main id="listView">
+      <div class="season-tabs" id="seasonTabs"></div>
+
+      <div class="season-info" id="seasonInfo">
+        <div>
+          <h2 id="currentSeasonTitle">데이터를 불러오는 중...</h2>
+          <p id="currentSeasonDesc"></p>
+        </div>
+      </div>
+
+      <div class="episode-list" id="episodeList"></div>
+    </main>
+
+    <!-- 에피소드 뷰어 화면 -->
+    <section class="viewer" id="viewerSection">
+      <div style="margin-bottom: 18px;">
+        <button class="btn btn-sm" onclick="goHome()">← 목록으로 돌아가기</button>
+      </div>
+      <div class="viewer-header">
+        <div class="viewer-week" id="viewerWeek"></div>
+        <h2 class="viewer-title" id="viewerTitle"></h2>
+      </div>
+      <div class="viewer-content" id="viewerContent"></div>
+      <div class="viewer-footer">
+        <button class="btn btn-sm" onclick="goHome()">목록으로</button>
+        <div id="viewerAdminControls"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 1. 수정자 비밀번호 인증 모달 -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal modal-sm">
+      <h3 id="authModalTitle">수정자 권한 인증</h3>
+      <p class="desc" id="authModalDesc">수정자 비밀번호를 입력해 주세요.</p>
+      <div class="form-group">
+        <label>비밀번호</label>
+        <input type="password" id="adminPasswordInput" class="form-control" placeholder="수정자 비밀번호 입력" onkeydown="if(event.key==='Enter') submitAuth()">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal('authModal')">취소</button>
+        <button class="btn btn-gold" onclick="submitAuth()">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 선열람 비밀번호 인증 모달 (1937) -->
+  <div class="modal-backdrop" id="readerModal">
+    <div class="modal modal-sm">
+      <h3>선열람 독자 인증</h3>
+      <p class="desc">초대받은 독자 전용 비밀번호를 입력하면 공개 예정 회차까지 모두 열람할 수 있습니다.</p>
+      <div class="form-group">
+        <label>열람 비밀번호</label>
+        <input type="password" id="readerPasswordInput" class="form-control" placeholder="비밀번호 4자리" onkeydown="if(event.key==='Enter') submitReaderAuth()">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal('readerModal')">취소</button>
+        <button class="btn btn-gold" id="readerSubmitBtn" onclick="submitReaderAuth()">열람하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 새 시즌 추가 모달 -->
+  <div class="modal-backdrop" id="seasonModal">
+    <div class="modal modal-sm">
+      <h3>새 시즌 추가</h3>
+      <p class="desc">에피소드들을 묶을 새로운 시즌을 생성합니다.</p>
+      <div class="form-group">
+        <label>시즌 제목</label>
+        <input type="text" id="seasonTitleInput" class="form-control" placeholder="예: 시즌 1. 깊은 울림의 서막">
+      </div>
+      <div class="form-group">
+        <label>시즌 소개 (선택)</label>
+        <input type="text" id="seasonDescInput" class="form-control" placeholder="시즌에 대한 짧은 소개글">
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal('seasonModal')">취소</button>
+        <button class="btn btn-gold" id="saveSeasonBtn" onclick="saveNewSeason()">시즌 생성</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 새 에피소드 게시 모달 (리치 에디터 & 이미지 삽입) -->
+  <div class="modal-backdrop" id="episodeModal">
+    <div class="modal">
+      <h3>새 에피소드 게시</h3>
+      <p class="desc">본문을 붙여넣고 서식을 적용하거나, 원하는 위치에 삽화/사진을 추가할 수 있습니다.</p>
+      <div class="form-group">
+        <label>소속 시즌</label>
+        <select id="epSeasonSelect" class="form-control"></select>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+        <div class="form-group">
+          <label>주차 표기</label>
+          <input type="text" id="epWeekInput" class="form-control" placeholder="예: 1주차">
+        </div>
+        <div class="form-group">
+          <label>공개 상태 설정</label>
+          <select id="epStatusSelect" class="form-control">
+            <option value="private">비공개 (선열람 전용 · 주간 공개 예정)</option>
+            <option value="public">즉시 전체 공개</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>에피소드 제목</label>
+        <input type="text" id="epTitleInput" class="form-control" placeholder="예: 제1화. 낮은 음자리표의 시작">
+      </div>
+      <div class="form-group">
+        <label>본문 내용 (서식 및 사진 삽입 지원)</label>
+        <div class="editor-toolbar">
+          <button type="button" class="tool-btn" onclick="execCmd('bold')" title="굵게"><b>B</b></button>
+          <button type="button" class="tool-btn" onclick="execCmd('italic')" title="기울임"><i>I</i></button>
+          <button type="button" class="tool-btn" onclick="execCmd('underline')" title="밑줄"><u>U</u></button>
+          <button type="button" class="tool-btn" onclick="insertQuote()">❝ 인용구</button>
+          <button type="button" class="tool-btn" onclick="insertDivider()">― 장면 구분선</button>
+          <button type="button" class="tool-btn" onclick="execCmd('justifyCenter')">가운데 정렬</button>
+          <button type="button" class="tool-btn" onclick="execCmd('justifyLeft')">왼쪽 정렬</button>
+          <button type="button" class="tool-btn" style="border-color: var(--gold-primary); color: var(--gold-soft);" onclick="triggerImageUpload()">🖼️ 사진 파일 삽입</button>
+          <button type="button" class="tool-btn" onclick="insertImageUrl()">🔗 이미지 URL</button>
+          <input type="file" id="imageFileInput" accept="image/*" style="display:none;" onchange="handleImageFile(event)">
+        </div>
+        <div id="epRichEditor" class="rich-editor" contenteditable="true" data-placeholder="여기에 원고를 붙여넣으세요. 커서가 위치한 곳에 사진이나 장면 구분선을 바로 넣을 수 있습니다..."></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeModal('episodeModal')">취소</button>
+        <button class="btn btn-gold" id="saveEpisodeBtn" onclick="saveNewEpisode()">에피소드 등록</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (Module) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc,
+      query, orderBy, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // =========================================================================
+    // [중요] 본인의 Firebase 설정값을 아래에 붙여넣으세요!
+    // =========================================================================
+    const firebaseConfig = {
+  	apiKey: "AIzaSyDmcl3_P89NSGtgQSMV9cOtQA2lVgFeH60",
+  	authDomain: "bass-webnovel.firebaseapp.com",
+  	projectId: "bass-webnovel",
+  	storageBucket: "bass-webnovel.firebasestorage.app",
+  	messagingSenderId: "914171384596",
+  	appId: "1:914171384596:web:5450b9d1ecd7614fc22801" 
+    };
+    // =========================================================================
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let novelData = [];
+    let currentSeasonId = null;
+    let adminKey = "";       // 수정자 인증 키
+    let isReaderVerified = false; // 선열람 독자 인증 여부
+    let pendingAuthAction = null;
+    let pendingEpisodeToOpen = null;
+
+    // Firestore에서 전체 시즌 및 에피소드 불러오기
+    async function fetchAllData() {
+      try {
+        const seasonsSnap = await getDocs(query(collection(db, "seasons"), orderBy("createdAt", "asc")));
+        const loadedSeasons = [];
+
+        for (const sDoc of seasonsSnap.docs) {
+          const sData = sDoc.data();
+          const epSnap = await getDocs(
+            query(collection(db, "seasons", sDoc.id, "episodes"), orderBy("createdAt", "asc"))
+          );
+          const episodes = epSnap.docs.map(eDoc => ({
+            id: eDoc.id,
+            ...eDoc.data()
+          }));
+
+          loadedSeasons.push({
+            id: sDoc.id,
+            title: sData.title,
+            description: sData.description || "",
+            episodes
+          });
+        }
+
+        novelData = loadedSeasons;
+        if (!currentSeasonId && novelData.length > 0) {
+          currentSeasonId = novelData[0].id;
+        }
+        renderAll();
+      } catch (err) {
+        console.error("데이터 로드 오류:", err);
+        document.getElementById("currentSeasonTitle").textContent = "Firebase 연결 설정을 확인해 주세요.";
+        document.getElementById("currentSeasonDesc").textContent = "index.html 상단의 firebaseConfig 값을 본인의 프로젝트 키로 교체해야 합니다.";
+      }
+    }
+
+    // 1. 수정자 권한 인증
+    window.openAuthModal = function(action) {
+      pendingAuthAction = action;
+      const titleEl = document.getElementById("authModalTitle");
+      const descEl = document.getElementById("authModalDesc");
+      const inputEl = document.getElementById("adminPasswordInput");
+
+      if (action === "login") {
+        titleEl.textContent = "수정자 권한 인증";
+        descEl.textContent = "시즌 및 에피소드 추가·관리를 위해 수정자 비밀번호를 입력하세요.";
+      } else if (action && action.type === "publish") {
+        titleEl.textContent = "에피소드 전체 공개 전환";
+        descEl.textContent = "해당 에피소드를 모든 독자에게 공개하려면 수정자 비밀번호를 입력하세요.";
+      }
+
+      inputEl.value = "";
+      document.getElementById("authModal").classList.add("open");
+      setTimeout(() => inputEl.focus(), 50);
+    };
+
+    window.submitAuth = async function() {
+      const input = document.getElementById("adminPasswordInput").value.trim();
+      if (!input) {
+        alert("비밀번호를 입력해 주세요.");
+        return;
+      }
+
+      adminKey = input;
+      closeModal("authModal");
+
+      if (pendingAuthAction && pendingAuthAction.type === "publish") {
+        await executePublish(pendingAuthAction.seasonId, pendingAuthAction.episodeId);
+      } else {
+        updateStatusUI();
+        renderAll();
+      }
+      pendingAuthAction = null;
+    };
+
+    // 2. 선열람 독자 인증 (Firestore config/reader 문서와 대조)
+    window.openReaderModal = function(episodeTarget = null) {
+      pendingEpisodeToOpen = episodeTarget;
+      const inputEl = document.getElementById("readerPasswordInput");
+      inputEl.value = "";
+      document.getElementById("readerModal").classList.add("open");
+      setTimeout(() => inputEl.focus(), 50);
+    };
+
+    window.submitReaderAuth = async function() {
+      const input = document.getElementById("readerPasswordInput").value.trim();
+      if (!input) {
+        alert("열람 비밀번호를 입력해 주세요.");
+        return;
+      }
+
+      const btn = document.getElementById("readerSubmitBtn");
+      btn.disabled = true;
+      btn.textContent = "확인 중...";
+
+      try {
+        const readerDoc = await getDoc(doc(db, "config", "reader"));
+        if (readerDoc.exists() && String(readerDoc.data().password) === input) {
+          isReaderVerified = true;
+          closeModal("readerModal");
+          updateStatusUI();
+          renderAll();
+
+          if (pendingEpisodeToOpen) {
+            const { seasonId, episodeId } = pendingEpisodeToOpen;
+            pendingEpisodeToOpen = null;
+            openEpisode(seasonId, episodeId);
+          } else {
+            alert("선열람 인증이 완료되었습니다. 비공개 회차까지 모두 열람할 수 있습니다.");
+          }
+        } else {
+          alert("열람 비밀번호가 일치하지 않습니다.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("인증 확인 중 오류가 발생했습니다. Firestore의 config/reader 설정을 확인해 주세요.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "열람하기";
+      }
+    };
+
+    window.logoutAll = function() {
+      adminKey = "";
+      isReaderVerified = false;
+      updateStatusUI();
+      goHome();
+    };
+
+    function updateStatusUI() {
+      const adminBar = document.getElementById("adminBar");
+      const readerBar = document.getElementById("readerBar");
+      const authArea = document.getElementById("authArea");
+
+      adminBar.classList.remove("admin");
+      readerBar.classList.remove("reader");
+
+      if (adminKey) {
+        adminBar.classList.add("admin");
+        authArea.innerHTML = `<span style="font-size:0.85rem; color:var(--gold-soft); font-weight:600;">수정자 모드 활성</span>`;
+      } else if (isReaderVerified) {
+        readerBar.classList.add("reader");
+        authArea.innerHTML = `<button class="btn" onclick="openAuthModal('login')">수정자 권한</button>`;
+      } else {
+        authArea.innerHTML = `
+          <button class="btn btn-reader" onclick="openReaderModal()">🔑 선열람 인증</button>
+          <button class="btn" onclick="openAuthModal('login')">수정자 권한</button>
+        `;
+      }
+    }
+
+    // 공개하기 처리
+    window.requestPublish = function(seasonId, episodeId, event) {
+      if (event) event.stopPropagation();
+      openAuthModal({ type: "publish", seasonId, episodeId });
+    };
+
+    async function executePublish(seasonId, episodeId) {
+      try {
+        const epRef = doc(db, "seasons", seasonId, "episodes", episodeId);
+        await updateDoc(epRef, {
+          isPublic: true,
+          adminKey: adminKey
+        });
+        updateStatusUI();
+        alert("에피소드가 전체 공개되었습니다!");
+        await fetchAllData();
+      } catch (err) {
+        console.error(err);
+        adminKey = "";
+        updateStatusUI();
+        alert("수정자 비밀번호가 일치하지 않거나 권한이 없습니다.");
+      }
+    }
+
+    // 렌더링
+    function renderAll() {
+      renderSeasonTabs();
+      renderEpisodeList();
+    }
+
+    function renderSeasonTabs() {
+      const tabsEl = document.getElementById("seasonTabs");
+      tabsEl.innerHTML = "";
+
+      novelData.forEach(season => {
+        const btn = document.createElement("button");
+        btn.className = `season-tab ${season.id === currentSeasonId ? "active" : ""}`;
+        btn.textContent = season.title;
+        btn.onclick = () => {
+          currentSeasonId = season.id;
+          goHome();
+        };
+        tabsEl.appendChild(btn);
+      });
+    }
+
+    function renderEpisodeList() {
+      const season = novelData.find(s => s.id === currentSeasonId) || novelData[0];
+      const listEl = document.getElementById("episodeList");
+
+      if (!season) {
+        document.getElementById("currentSeasonTitle").textContent = "등록된 시즌이 없습니다.";
+        document.getElementById("currentSeasonDesc").textContent = "우측 상단 [수정자 권한]을 눌러 첫 번째 시즌을 만들어 보세요.";
+        listEl.innerHTML = `<div class="empty-state">아직 연재가 시작되지 않았습니다.</div>`;
+        return;
+      }
+
+      currentSeasonId = season.id;
+      document.getElementById("currentSeasonTitle").textContent = season.title;
+      document.getElementById("currentSeasonDesc").textContent = season.description || "주간 연재 에피소드 목록";
+
+      if (!season.episodes || season.episodes.length === 0) {
+        listEl.innerHTML = `<div class="empty-state">아직 등록된 에피소드가 없습니다.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = "";
+      const canReadAll = Boolean(adminKey || isReaderVerified);
+
+      season.episodes.forEach(ep => {
+        const card = document.createElement("div");
+        const isUnlocked = ep.isPublic || canReadAll;
+        card.className = `episode-card ${isUnlocked ? "" : "locked"}`;
+
+        const statusBadge = ep.isPublic
+          ? `<span class="status-pill status-public">공개됨</span>`
+          : `<span class="status-pill status-private">${canReadAll ? "선열람 가능" : "비공개 · 공개 예정"}</span>`;
+
+        let controlsHtml = "";
+        if (!ep.isPublic) {
+          controlsHtml += `<button class="btn btn-sm btn-gold" onclick="requestPublish('${season.id}', '${ep.id}', event)">공개하기</button>`;
+        }
+        if (adminKey) {
+          controlsHtml += `<button class="btn btn-sm btn-danger" onclick="deleteEpisode('${season.id}', '${ep.id}', event)">삭제</button>`;
+        }
+
+        card.innerHTML = `
+          <div class="episode-main" onclick="openEpisode('${season.id}', '${ep.id}')">
+            <div class="episode-meta">
+              <span class="week-badge">${ep.week}</span>
+              ${statusBadge}
+            </div>
+            <div class="episode-title">${isUnlocked ? ep.title : "🔒 " + ep.title}</div>
+          </div>
+          <div class="episode-controls">
+            ${controlsHtml}
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    // 에피소드 열람
+    window.openEpisode = function(seasonId, episodeId) {
+      const season = novelData.find(s => s.id === seasonId);
+      const ep = season?.episodes.find(e => e.id === episodeId);
+      if (!ep) return;
+
+      const canRead = ep.isPublic || adminKey || isReaderVerified;
+      if (!canRead) {
+        openReaderModal({ seasonId, episodeId });
+        return;
+      }
+
+      document.getElementById("listView").style.display = "none";
+      const viewer = document.getElementById("viewerSection");
+      viewer.classList.add("active");
+
+      let badgeText = "";
+      if (!ep.isPublic) {
+        badgeText = adminKey ? " (수정자 미리보기)" : " (선열람 독자 전용)";
+      }
+
+      document.getElementById("viewerWeek").textContent = `${season.title} · ${ep.week}${badgeText}`;
+      document.getElementById("viewerTitle").textContent = ep.title;
+
+      const contentContainer = document.getElementById("viewerContent");
+      if (ep.isHtml) {
+        contentContainer.innerHTML = ep.content;
+      } else {
+        contentContainer.textContent = ep.content;
+      }
+
+      const footerCtrl = document.getElementById("viewerAdminControls");
+      if (!ep.isPublic) {
+        footerCtrl.innerHTML = `<button class="btn btn-sm btn-gold" onclick="requestPublish('${season.id}', '${ep.id}')">이 회차 전체 공개하기</button>`;
+      } else {
+        footerCtrl.innerHTML = "";
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    window.goHome = function() {
+      document.getElementById("viewerSection").classList.remove("active");
+      document.getElementById("listView").style.display = "block";
+      renderAll();
+    };
+
+    // 리치 에디터 서식 및 이미지 삽입 도구
+    window.execCmd = function(cmd) {
+      document.getElementById("epRichEditor").focus();
+      document.execCommand(cmd, false, null);
+    };
+
+    window.insertQuote = function() {
+      const editor = document.getElementById("epRichEditor");
+      editor.focus();
+      document.execCommand("insertHTML", false, `<blockquote>여기에 인용문이나 독백을 입력하세요.</blockquote><p><br></p>`);
+    };
+
+    window.insertDivider = function() {
+      const editor = document.getElementById("epRichEditor");
+      editor.focus();
+      document.execCommand("insertHTML", false, `<hr><p><br></p>`);
+    };
+
+    window.triggerImageUpload = function() {
+      document.getElementById("imageFileInput").click();
+    };
+
+    // 로컬 이미지 파일을 선택하면 자동 압축 후 에디터 커서 위치에 삽입
+    window.handleImageFile = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 900;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Firestore 문서 크기 제한(1MB)을 고려해 JPEG 0.78 품질로 최적화
+          const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.78);
+          insertHtmlAtEditor(`<img src="${compressedDataUrl}" alt="삽화"><p><br></p>`);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+      event.target.value = "";
+    };
+
+    window.insertImageUrl = function() {
+      const url = prompt("삽입할 이미지의 웹 주소(URL)를 입력하세요:");
+      if (url && url.trim()) {
+        insertHtmlAtEditor(`<img src="${url.trim()}" alt="삽화"><p><br></p>`);
+      }
+    };
+
+    function insertHtmlAtEditor(html) {
+      const editor = document.getElementById("epRichEditor");
+      editor.focus();
+      document.execCommand("insertHTML", false, html);
+    }
+
+    // 시즌 추가
+    window.openSeasonModal = function() {
+      document.getElementById("seasonTitleInput").value = "";
+      document.getElementById("seasonDescInput").value = "";
+      document.getElementById("seasonModal").classList.add("open");
+    };
+
+    window.saveNewSeason = async function() {
+      const title = document.getElementById("seasonTitleInput").value.trim();
+      const desc = document.getElementById("seasonDescInput").value.trim();
+      if (!title) {
+        alert("시즌 제목을 입력해 주세요.");
+        return;
+      }
+
+      const btn = document.getElementById("saveSeasonBtn");
+      btn.disabled = true;
+      btn.textContent = "저장 중...";
+
+      try {
+        const docRef = await addDoc(collection(db, "seasons"), {
+          title,
+          description: desc,
+          adminKey: adminKey,
+          createdAt: serverTimestamp()
+        });
+        currentSeasonId = docRef.id;
+        closeModal("seasonModal");
+        await fetchAllData();
+      } catch (err) {
+        console.error(err);
+        alert("저장에 실패했습니다. 수정자 비밀번호가 올바른지 확인해 주세요.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "시즌 생성";
+      }
+    };
+
+    // 에피소드 추가
+    window.openEpisodeModal = function() {
+      if (novelData.length === 0) {
+        alert("먼저 [+ 새 시즌 추가]로 시즌을 하나 생성해 주세요.");
+        return;
+      }
+
+      const select = document.getElementById("epSeasonSelect");
+      select.innerHTML = "";
+      novelData.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.id;
+        opt.textContent = s.title;
+        if (s.id === currentSeasonId) opt.selected = true;
+        select.appendChild(opt);
+      });
+
+      const currentSeason = novelData.find(s => s.id === currentSeasonId);
+      const nextWeekNum = (currentSeason?.episodes.length || 0) + 1;
+
+      document.getElementById("epWeekInput").value = `${nextWeekNum}주차`;
+      document.getElementById("epTitleInput").value = "";
+      document.getElementById("epStatusSelect").value = "private";
+      document.getElementById("epRichEditor").innerHTML = "";
+      document.getElementById("episodeModal").classList.add("open");
+    };
+
+    window.saveNewEpisode = async function() {
+      const seasonId = document.getElementById("epSeasonSelect").value;
+      const week = document.getElementById("epWeekInput").value.trim();
+      const title = document.getElementById("epTitleInput").value.trim();
+      const isPublic = document.getElementById("epStatusSelect").value === "public";
+      const editorEl = document.getElementById("epRichEditor");
+      const htmlContent = editorEl.innerHTML.trim();
+
+      if (!week || !title || (!editorEl.textContent.trim() && !editorEl.querySelector("img"))) {
+        alert("주차, 제목, 본문 내용을 모두 입력해 주세요.");
+        return;
+      }
+
+      // Firestore 단일 문서 최대 용량(1MB) 체크
+      if (new Blob([htmlContent]).size > 950000) {
+        alert("본문 및 이미지 전체 용량이 너무 큽니다(최대 약 950KB). 사진 개수를 줄이거나 이미지 URL 삽입을 이용해 주세요.");
+        return;
+      }
+
+      const btn = document.getElementById("saveEpisodeBtn");
+      btn.disabled = true;
+      btn.textContent = "게시 중...";
+
+      try {
+        await addDoc(collection(db, "seasons", seasonId, "episodes"), {
+          week,
+          title,
+          isPublic,
+          isHtml: true,
+          content: htmlContent,
+          adminKey: adminKey,
+          createdAt: serverTimestamp()
+        });
+        currentSeasonId = seasonId;
+        closeModal("episodeModal");
+        await fetchAllData();
+      } catch (err) {
+        console.error(err);
+        alert("에피소드 등록에 실패했습니다. 수정자 비밀번호를 확인해 주세요.");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "에피소드 등록";
+      }
+    };
+
+    window.deleteEpisode = async function(seasonId, episodeId, event) {
+      if (event) event.stopPropagation();
+      if (!confirm("정말 이 에피소드를 영구 삭제하시겠습니까?")) return;
+
+      try {
+        await deleteDoc(doc(db, "seasons", seasonId, "episodes", episodeId));
+        await fetchAllData();
+      } catch (err) {
+        console.error(err);
+        alert("삭제 권한이 없습니다. 수정자 비밀번호를 다시 인증해 주세요.");
+      }
+    };
+
+    window.closeModal = function(id) {
+      document.getElementById(id).classList.remove("open");
+    };
+
+    // 초기 데이터 로드
+    fetchAllData();
+  </script>
+</body>
+</html>
